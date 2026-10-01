@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Your comic is ready — ComicCraft{% endblock %}
+{% block content %}
+<section class="success-shell">
+  <div class="success-card">
+    <div class="success-stamp" aria-hidden="true"><span>✓</span></div>
+    <span class="micro-label">A KEEPSAKE, IN THE MAKING</span>
+    <h1>Your comic is<br><em>ready to keep.</em></h1>
+    {% if comic %}
+      <p class="success-copy"><strong>{{ comic.title }}</strong> is ready as a five-page PDF — one frame for every moment.</p>
+      <a class="button button-primary success-download" id="download-pdf" href="{{ comic.pdf_url }}">Download the PDF <span aria-hidden="true">↓</span></a>
+      <p class="success-hint" id="download-hint">Your download should begin automatically. If it doesn’t, use the button above.</p>
+      <script>
+        window.addEventListener('load', () => {
+          const key = 'comiccraft-downloaded-{{ comic.id }}';
+          if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, 'yes');
+            window.setTimeout(() => document.getElementById('download-pdf')?.click(), 450);
+          }
+        });
+      </script>
+    {% else %}
+      <p class="success-copy">Your illustrated story has been laid out and is ready for its next adventure.</p>
+      <a class="button button-primary success-download" href="/">Create your first comic <span aria-hidden="true">↗</span></a>
+    {% endif %}
+    <a class="text-link" href="/">Go create another comic <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="success-confetti" aria-hidden="true"><span>✳</span><span>✦</span><span>✷</span><span>✴</span><span>✳</span></div>
+</section>
+{% endblock %}
