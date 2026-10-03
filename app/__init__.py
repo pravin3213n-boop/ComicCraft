@@ -1,1 +1,0 @@
-"""ComicCraft application package."""
