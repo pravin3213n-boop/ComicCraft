@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ comic.title }} — ComicCraft{% endblock %}
+{% block content %}
+<section class="preview-heading">
+  <a href="/" class="back-link"><span aria-hidden="true">←</span> Back to the creator</a>
+  <div class="preview-title-row"><div><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR COMIC IS HERE</div><h1>{{ comic.title }}</h1><p class="preview-subtitle">A {{ comic.request.tone }} adventure in {{ comic.request.art_style }} · {{ comic.request.setting }}</p></div><div class="preview-actions"><a class="button button-primary" href="{{ comic.export_url }}">Download your comic <span aria-hidden="true">↗</span></a><a class="button button-outline" href="/">Make another</a></div></div>
+  {% if comic.is_demo %}<div class="mode-banner"><span class="mode-banner-mark">✦</span><span><strong>Demo studio</strong> — preview text and art are generated locally. Add Gemini and Hugging Face keys to enable live AI generation.</span></div>{% endif %}
+  {% for warning in comic.warnings %}<div class="mode-banner warning-banner"><span class="mode-banner-mark">↗</span><span>{{ warning }}</span></div>{% endfor %}
+  <div class="comic-meta"><span><b>05</b> FRAMES</span><span class="meta-divider"></span><span>MADE {{ comic.created_at[:10] }}</span><span class="meta-spacer"></span><span class="meta-pill">✦ {{ comic.providers.story }}</span></div>
+</section>
+<section class="comic-grid" aria-label="Comic panels">
+  {% for panel in comic.layout %}
+  <article class="comic-panel {% if loop.first %}panel-featured{% endif %}">
+    <div class="panel-topline"><span class="panel-number">{{ "%02d"|format(panel.panel_number) }}</span><span class="panel-label">FRAME {{ "%02d"|format(panel.panel_number) }} / 05</span><span class="panel-art-source">{% if panel.image_source == 'local demo art' %}SAMPLE ART{% else %}AI ART{% endif %}</span></div>
+    <h2>{{ panel.title }}</h2>
+    <div class="panel-image-wrap"><img src="{{ panel.image_url }}" alt="{{ panel.scene_description }}" loading="lazy"><span class="image-index">{{ "%02d"|format(panel.panel_number) }}</span></div>
+    <p class="scene-description">{{ panel.scene_description }}</p>
+    <div class="caption-line"><span class="caption-mark">✳</span><span>{{ panel.caption }}</span></div>
+    <p class="panel-narration">{{ panel.narration }}</p>
+    <blockquote class="panel-dialogue">{{ panel.dialogue }}</blockquote>
+    <details class="image-prompt-details"><summary>See image prompt</summary><p>{{ panel.image_prompt }}</p></details>
+  </article>
+  {% endfor %}
+</section>
+<section class="preview-bottom"><div><span class="micro-label">THAT’S A WRAP</span><h2>Keep this little <em>world.</em></h2></div><div class="preview-actions"><a class="button button-primary" href="{{ comic.export_url }}">Download PDF <span aria-hidden="true">↗</span></a><a class="button button-outline" href="/">Create a new story</a></div></section>
+{% endblock %}
